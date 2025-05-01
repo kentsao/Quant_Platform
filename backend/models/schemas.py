@@ -18,3 +18,7 @@ class User(BaseModel):
 
     class Config:
         orm_mode = True
+
+class UserLogin(BaseModel):
+    username_or_email: str
+    password: constr(min_length=8)

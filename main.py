@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from backend.database.database import engine, Base
 from backend.apis import auth
+from backend.services import token_service  # Import token_service (though used in auth.py)
 
 Base.metadata.create_all(bind=engine)
 

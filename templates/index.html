@@ -1,30 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Register</title>
+    <title>Register / Login</title>
 </head>
 <body>
     <h1>Register</h1>
     <form id="registrationForm">
         <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <label for="reg_username">Username:</label>
+            <input type="text" id="reg_username" name="username" required>
         </div>
         <br>
         <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <label for="reg_email">Email:</label>
+            <input type="email" id="reg_email" name="email" required>
         </div>
         <br>
         <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <label for="reg_password">Password:</label>
+            <input type="password" id="reg_password" name="password" required>
         </div>
         <br>
         <button type="submit">Register</button>
     </form>
 
-    <div id="message"></div>
+    <div id="registrationMessage"></div>
+
+    <hr>
+
+    <h1>Login</h1>
+    <form id="loginForm">
+        <div>
+            <label for="login_username">Username or Email:</label>
+            <input type="text" id="login_username" name="username" required>
+        </div>
+        <br>
+        <div>
+            <label for="login_password">Password:</label>
+            <input type="password" id="login_password" name="password" required>
+        </div>
+        <br>
+        <button type="submit">Login</button>
+    </form>
+
+    <div id="loginMessage"></div>
 
     <script>
         document.getElementById('registrationForm').addEventListener('submit', async (event) => {
@@ -41,13 +60,38 @@
             });
 
             const result = await response.json();
-            const messageDiv = document.getElementById('message');
+            const messageDiv = document.getElementById('registrationMessage');
 
             if (response.ok) {
                 messageDiv.textContent = 'Registration successful! User ID: ' + result.id;
                 document.getElementById('registrationForm').reset();
             } else {
                 messageDiv.textContent = 'Registration failed: ' + result.detail;
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+
+            const response = await fetch('/auth/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(data).toString(),
+            });
+
+            const result = await response.json();
+            const messageDiv = document.getElementById('loginMessage');
+
+            if (response.ok) {
+                messageDiv.textContent = 'Login successful! Access Token: ' + result.access_token;
+                localStorage.setItem('access_token', result.access_token); // Store token for future use
+                document.getElementById('loginForm').reset();
+            } else {
+                messageDiv.textContent = 'Login failed: ' + result.detail;
             }
         });
     </script>
