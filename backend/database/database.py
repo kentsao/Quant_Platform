@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
 # Define the database URL (SQLite in this case, stored in the project root)
 SQLALCHEMY_DATABASE_URL = "sqlite:///./quant_platform.db"

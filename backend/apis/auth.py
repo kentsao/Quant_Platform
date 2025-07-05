@@ -19,6 +19,7 @@ async def register_user(user: schemas.UserCreate, db: Session = Depends(get_db))
 
 @router.post("/token")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    print(f"Inside /auth/token: auth_service = {auth_service}") # Add this line
     user = auth_service.authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=401, detail="Incorrect username or password")

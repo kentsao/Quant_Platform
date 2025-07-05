@@ -1,19 +1,22 @@
-from sqlalchemy import Column, Integer, String, DateTime, Float, func, Boolean
-from sqlalchemy.ext.declarative import declarative_base
-from backend.database.database import Base  # Import Base from our database setup
+from sqlalchemy import Boolean, Column, Integer, String, DateTime, Float  # Import Float
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.expression import text
+from datetime import datetime
 
-# Base = declarative_base() # No need to define it here again
+from backend.database.database import Base
 
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True, nullable=False)
-    email = Column(String, unique=True, index=True, nullable=False)
+    id = Column(Integer, primary_key=True, nullable=False)
+    username = Column(String, nullable=False, unique=True)
+    email = Column(String, nullable=False, unique=True)
     password_hash = Column(String, nullable=False)
-    cash = Column(Float, default=0.0)
-    registration_date = Column(DateTime, default=func.now())
+    created_at = Column(DateTime, default=datetime.utcnow)
     is_active = Column(Boolean, default=True)
+    cash = Column(Float, default=0.0)  # Add the cash column
+
+    strategies = relationship("Strategy", back_populates="provider")
 
     def __repr__(self):
         return f"<User id={self.id}, username='{self.username}', email='{self.email}'>"
